@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(huggingface-cli:*)",
+      "Bash(python -m huggingface_hub.commands.huggingface_cli:*)",
+      "Bash(python deploy.py:*)"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+---
+title: AI Call Transcriber
+emoji: 🎙️
+colorFrom: blue
+colorTo: purple
+sdk: gradio
+sdk_version: 4.44.0
+app_file: app.py
+pinned: false
+license: mit
+short_description: Transcribe audio calls with speaker identification
+tags:
+  - transcription
+  - speaker-diarization
+  - whisper
+  - pyannote
+  - audio
+---
