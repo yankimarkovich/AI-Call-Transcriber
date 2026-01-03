@@ -13,6 +13,16 @@ pinned: false
 
 AI-powered audio call transcriber with speaker identification.
 
+## Features
+
+- Speaker diarization using pyannote.audio 3.1
+- Transcription using Groq Whisper large-v3 (better accuracy than whisper-1)
+- Word-level timestamps for precise speaker attribution
+- Organized output with participant labels (Participant 1, Participant 2, etc.)
+- Downloadable transcript file
+- Multi-language support (auto-detection)
+- Fallback handling for errors
+
 ## Project Structure
 
 ```
@@ -22,56 +32,15 @@ AI-Call-Transcriber/
 │   ├── __init__.py
 │   ├── agent.py           # Transcription agent
 │   └── tools.py           # Audio processing utilities
+├── deploy.py              # HuggingFace deployment script
 ├── requirements.txt
-├── README.md
-└── space.yaml             # HuggingFace Space config
+└── README.md
 ```
 
-## Features
-
-- Speaker diarization (pyannote.audio)
-- Transcription (OpenAI Whisper API)
-- Organized output with participant labels
-- Downloadable transcript
-- Fallback handling
-
-## Deploy to Hugging Face Space (Terminal)
-
-### 1. Install HuggingFace CLI
+## Quick Deploy to HuggingFace Space
 
 ```bash
-pip install huggingface_hub
-```
-
-### 2. Login to HuggingFace
-
-```bash
-huggingface-cli login
-```
-
-### 3. Upload to Your Space
-
-```bash
-cd C:\Users\yanki\Code\GitHub\AI-Call-Transcriber
-huggingface-cli upload YOUR_USERNAME/YOUR_SPACE_NAME . . --repo-type space
-```
-
-Replace `YOUR_USERNAME/YOUR_SPACE_NAME` with your actual space path (e.g., `johndoe/call-transcriber`).
-
-### Alternative: Git Push
-
-```bash
-# Clone your existing space
-git clone https://huggingface.co/spaces/YOUR_USERNAME/YOUR_SPACE_NAME
-cd YOUR_SPACE_NAME
-
-# Copy files
-cp -r /path/to/AI-Call-Transcriber/* .
-
-# Push
-git add .
-git commit -m "Deploy AI Call Transcriber"
-git push
+python deploy.py --token YOUR_HF_TOKEN --groq-key YOUR_GROQ_KEY
 ```
 
 ## Local Development
@@ -80,9 +49,14 @@ git push
 # Create virtual environment
 python -m venv venv
 venv\Scripts\activate  # Windows
+source venv/bin/activate  # Linux/Mac
 
 # Install dependencies
 pip install -r requirements.txt
+
+# Set environment variables
+export GROQ_API_KEY=your_groq_key
+export HF_TOKEN=your_hf_token
 
 # Run
 python app.py
@@ -90,11 +64,24 @@ python app.py
 
 ## Required API Keys
 
-- **OpenAI API Key**: [platform.openai.com](https://platform.openai.com)
-- **HuggingFace Token**: [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)
-  - Must accept pyannote terms: [pyannote/speaker-diarization-3.1](https://huggingface.co/pyannote/speaker-diarization-3.1)
+### 1. Groq API Key (Free)
+Get your free API key at [console.groq.com](https://console.groq.com/keys)
+
+### 2. HuggingFace Token
+Get your token at [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)
+
+**Important:** You must accept the terms for these gated models:
+- [pyannote/speaker-diarization-3.1](https://huggingface.co/pyannote/speaker-diarization-3.1)
+- [pyannote/segmentation-3.0](https://huggingface.co/pyannote/segmentation-3.0)
 
 ## Cost
 
-- pyannote: Free (runs on HF Space)
-- OpenAI Whisper: ~$0.006/min
+- **pyannote:** Free (runs locally on HF Space)
+- **Groq Whisper:** Free tier available
+
+## Tech Stack
+
+- **Transcription:** Groq Whisper large-v3
+- **Speaker Diarization:** pyannote.audio 3.1
+- **UI:** Gradio
+- **Hosting:** HuggingFace Spaces
