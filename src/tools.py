@@ -8,7 +8,7 @@ from typing import Optional
 
 from pydub import AudioSegment
 from pyannote.audio import Pipeline
-from openai import OpenAI
+from groq import Groq
 import torch
 
 
@@ -82,16 +82,16 @@ def perform_diarization(
         return []
 
 
-def transcribe_audio(client: OpenAI, audio_path: str, language: str = "he") -> dict:
-    """Transcribe audio using OpenAI Whisper API with word-level timestamps."""
+def transcribe_audio(client: Groq, audio_path: str) -> dict:
+    """Transcribe audio using Groq Whisper large-v3 with word-level timestamps."""
     try:
         with open(audio_path, "rb") as audio_file:
             transcript = client.audio.transcriptions.create(
-                model="whisper-1",
+                model="whisper-large-v3",
                 file=audio_file,
-                language=language,
                 response_format="verbose_json",
-                timestamp_granularities=["word", "segment"]
+                timestamp_granularities=["word", "segment"],
+                temperature=0.0
             )
         return transcript
     except Exception as e:

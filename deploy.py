@@ -2,8 +2,7 @@
 Deploy script for Hugging Face Space.
 
 Usage:
-  python deploy.py --token YOUR_HF_TOKEN
-  python deploy.py --token YOUR_HF_TOKEN --openai-key YOUR_OPENAI_KEY
+  python deploy.py --token YOUR_HF_TOKEN --groq-key YOUR_GROQ_KEY
 """
 
 import argparse
@@ -19,7 +18,7 @@ REPO_ID = f"{USERNAME}/{SPACE_NAME}"
 def main():
     parser = argparse.ArgumentParser(description="Deploy to HuggingFace Space")
     parser.add_argument("--token", required=True, help="HuggingFace token")
-    parser.add_argument("--openai-key", help="OpenAI API key (optional, sets as secret)")
+    parser.add_argument("--groq-key", help="Groq API key (optional, sets as secret)")
     args = parser.parse_args()
 
     print("=" * 50)
@@ -50,9 +49,9 @@ def main():
     api.add_space_secret(repo_id=REPO_ID, key="HF_TOKEN", value=args.token)
     print("[OK] HF_TOKEN secret added!")
 
-    if args.openai_key:
-        api.add_space_secret(repo_id=REPO_ID, key="OPENAI_API_KEY", value=args.openai_key)
-        print("[OK] OPENAI_API_KEY secret added!")
+    if args.groq_key:
+        api.add_space_secret(repo_id=REPO_ID, key="GROQ_API_KEY", value=args.groq_key)
+        print("[OK] GROQ_API_KEY secret added!")
 
     # Step 4: Upload code
     print(f"\n[4/4] Uploading code to {REPO_ID}")

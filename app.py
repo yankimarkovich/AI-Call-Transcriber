@@ -7,7 +7,7 @@ import gradio as gr
 from src.agent import create_agent
 
 # Load API keys from environment
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 HF_TOKEN = os.environ.get("HF_TOKEN")
 
 
@@ -15,12 +15,12 @@ def process_audio(audio_file: str, num_speakers: int) -> tuple:
     """Handle audio upload and run transcription agent."""
     if not audio_file:
         return "Please upload an audio file.", None, ""
-    if not OPENAI_API_KEY:
-        return "Error: OPENAI_API_KEY not configured.", None, ""
+    if not GROQ_API_KEY:
+        return "Error: GROQ_API_KEY not configured.", None, ""
     if not HF_TOKEN:
         return "Error: HF_TOKEN not configured.", None, ""
 
-    agent = create_agent(OPENAI_API_KEY, HF_TOKEN)
+    agent = create_agent(GROQ_API_KEY, HF_TOKEN)
 
     # Convert num_speakers: 0 means auto-detect
     speakers = num_speakers if num_speakers > 0 else None

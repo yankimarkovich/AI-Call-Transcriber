@@ -7,7 +7,7 @@ import logging
 from dataclasses import dataclass
 from typing import Optional, Tuple
 
-from openai import OpenAI
+from groq import Groq
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -40,8 +40,8 @@ class TranscriptionAgent:
     Handles speaker diarization and transcription with fallback support.
     """
 
-    def __init__(self, openai_api_key: str, hf_token: str):
-        self.openai_client = OpenAI(api_key=openai_api_key)
+    def __init__(self, groq_api_key: str, hf_token: str):
+        self.groq_client = Groq(api_key=groq_api_key)
         self.hf_token = hf_token
         self.diarization_pipeline = None
 
@@ -107,8 +107,8 @@ class TranscriptionAgent:
                 logger.warning("Diarization skipped - pipeline not available")
 
             # Step 3: Transcription
-            logger.info("Starting transcription with Whisper (Hebrew)...")
-            transcript = transcribe_audio(self.openai_client, wav_path)
+            logger.info("Starting transcription with Groq Whisper large-v3...")
+            transcript = transcribe_audio(self.groq_client, wav_path)
             num_words = len(getattr(transcript, 'words', []))
             logger.info(f"Transcription complete: {num_words} words with timestamps")
 
@@ -150,7 +150,7 @@ class TranscriptionAgent:
 
         try:
             wav_path = convert_to_wav(audio_path)
-            transcript = transcribe_audio(self.openai_client, wav_path)
+            transcript = transcribe_audio(self.groq_client, wav_path)
 
             fallback_text = (
                 f"[Speaker identification failed - showing plain transcript]\n\n"
@@ -191,6 +191,6 @@ class TranscriptionAgent:
         )
 
 
-def create_agent(openai_api_key: str, hf_token: str) -> TranscriptionAgent:
+def create_agent(groq_api_key: str, hf_token: str) -> TranscriptionAgent:
     """Factory function to create a TranscriptionAgent."""
-    return TranscriptionAgent(openai_api_key, hf_token)
+    return TranscriptionAgent(groq_api_key, hf_token)
